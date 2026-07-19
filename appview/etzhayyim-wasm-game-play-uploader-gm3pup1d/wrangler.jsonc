@@ -1,0 +1,35 @@
+{
+  "name": "kotodama-gm3pup1d",
+  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2025-03-17",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  "vars": {
+    "APP_CAPABILITIES": "[\"bpmn-dispatch\",\"gameplay-upload-campaign\",\"reward-estimation\"]",
+    "APP_DESCRIPTION": "Game Play Uploader — recruits players to upload gameplay videos in exchange for Amazon gift cards at ¥100/hour via hc.etzhayyim.com",
+    "APP_DISPLAY_NAME": "Game Play Uploader",
+    "APP_EMBED_URL": "https://gm3pup1d.etzhayyim.com/?embed=1",
+    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_NANOID": "gm3pup1d",
+    "APP_PERFORMER_TYPE": "service",
+    "APP_UI_TYPE": "appview",
+    "AGENTGATEWAY_MCP_ROUTER_URL": "https://mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message"
+  },
+  "routes": [
+    {
+      "pattern": "gm3pup1d.etzhayyim.com/*",
+      "zone_name": "etzhayyim.com"
+    },
+    {
+      "pattern": "game-play-uploader.etzhayyim.com/*",
+      "zone_name": "etzhayyim.com"
+    }
+  ]
+}

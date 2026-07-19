@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>ゲームで あそんで ギフトカード！｜こども向けA4チラシ</title>
+<style>
+  /* A4 print sheet (210 × 297 mm) — Kids flyer
+     Chrome/Safari: ファイル → 印刷 → 「PDFに保存」
+     余白: なし / 背景グラフィック: ON / 用紙: A4 */
+  @page { size: A4 portrait; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Maru Gothic ProN", "M PLUS Rounded 1c",
+      "Rounded Mplus 1c", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    color: #2a1d4a;
+    background: #f3e8ff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sheet {
+    width: 210mm; height: 297mm;
+    margin: 10mm auto;
+    background: #fff8ec;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+
+  /* Wavy top band */
+  .top {
+    position: relative;
+    background: linear-gradient(135deg, #ffd23f 0%, #ff7ab6 55%, #4cc2ff 100%);
+    padding: 10mm 12mm 18mm;
+    color: #2a1d4a;
+    text-align: center;
+  }
+  .top::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: -6mm; height: 12mm;
+    background: radial-gradient(circle at 10mm 0, #fff8ec 6mm, transparent 6.5mm) repeat-x;
+    background-size: 20mm 12mm;
+  }
+  .tag {
+    display: inline-block;
+    background: #ffffff; color: #b03070;
+    padding: 2mm 5mm; border-radius: 999px;
+    font-weight: 900; font-size: 10pt; letter-spacing: .1em;
+    border: 1mm solid #fff;
+  }
+  h1 {
+    font-size: 32pt; line-height: 1.2; margin: 5mm 0 3mm;
+    font-weight: 900;
+  }
+  h1 .hl {
+    background: linear-gradient(transparent 55%, #fff 55%);
+    padding: 0 2mm;
+  }
+  .top p.lead {
+    font-size: 11.5pt; line-height: 1.8; margin: 0;
+  }
+  .emojis { font-size: 30pt; letter-spacing: 8mm; margin: 4mm 0 2mm; }
+
+  /* Price circle */
+  .price-wrap {
+    display: flex; justify-content: center; margin-top: -6mm; padding: 0 12mm;
+    position: relative; z-index: 2;
+  }
+  .price {
+    width: 78mm; height: 78mm; border-radius: 50%;
+    background: #fff;
+    border: 2mm dashed #ff9f43;
+    display: grid; place-items: center; text-align: center;
+    box-shadow: 0 4mm 0 rgba(255,122,182,.25);
+  }
+  .price .big {
+    font-size: 36pt; font-weight: 900; color: #d9480f; line-height: 1;
+  }
+  .price .unit { font-size: 11pt; color: #7a4b00; font-weight: 800; margin-top: 2mm; }
+  .price .sub { font-size: 9.5pt; color: #7a4b00; margin-top: 2mm; line-height: 1.5; }
+  .price .gift { font-size: 24pt; margin-top: 1mm; }
+
+  /* Body */
+  .body { padding: 4mm 12mm 0; }
+  h2 {
+    text-align: center; font-size: 16pt; margin: 6mm 0 4mm;
+  }
+  h2 .pen { background: linear-gradient(transparent 55%, #7ee8b8 55%); padding: 0 2mm; }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm;
+  }
+  .step {
+    background: #fff; border: 1.2mm solid #ffd23f; border-radius: 4mm;
+    padding: 3mm; text-align: center;
+  }
+  .step .n {
+    display: inline-block; width: 9mm; height: 9mm; line-height: 9mm;
+    background: #ff7ab6; color: #fff; border-radius: 50%;
+    font-weight: 900; font-size: 12pt;
+  }
+  .step h3 { margin: 2mm 0 1mm; font-size: 10.5pt; }
+  .step p { margin: 0; font-size: 8.5pt; color: #5a4c7a; line-height: 1.55; }
+  .step .icon { font-size: 18pt; margin-top: 1mm; display: block; }
+
+  .rules {
+    margin-top: 6mm;
+    background: #eaf7ff; border: 1.2mm solid #b9e4ff;
+    border-radius: 4mm; padding: 4mm 5mm;
+  }
+  .rules h3 { margin: 0 0 2mm; font-size: 12pt; color: #0a5a88; }
+  .rules ul { margin: 0; padding-left: 6mm; }
+  .rules li { font-size: 10pt; line-height: 1.8; }
+
+  .parent {
+    margin-top: 4mm;
+    background: #fff0f5; border: 1.2mm solid #ffc4de;
+    border-radius: 4mm; padding: 4mm 5mm;
+  }
+  .parent h3 { margin: 0 0 2mm; font-size: 11pt; color: #a0306b; }
+  .parent p { margin: 1mm 0; font-size: 8.8pt; line-height: 1.65; color: #5a4c7a; }
+  .parent b { color: #a0306b; }
+
+  /* CTA strip */
+  .cta {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 6mm 12mm 8mm;
+    background: linear-gradient(135deg, #4cc2ff, #7ee8b8);
+    color: #2a1d4a;
+    display: grid; grid-template-columns: 1fr 32mm; gap: 6mm; align-items: center;
+  }
+  .cta h3 { margin: 0 0 2mm; font-size: 14pt; }
+  .cta p { margin: 0 0 2mm; font-size: 10pt; line-height: 1.55; }
+  .cta .url {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: #fff; color: #0c4a6e; padding: 2mm 3mm; border-radius: 1.5mm;
+    font-weight: 800; font-size: 10pt; display: inline-block;
+  }
+  .qr {
+    width: 32mm; height: 32mm; background: #fff;
+    border-radius: 3mm; display: grid; place-items: center; padding: 2mm;
+  }
+  .qr .frame {
+    width: 100%; height: 100%;
+    background: repeating-conic-gradient(#2a1d4a 0% 25%, #fff 25% 50%) 0/3mm 3mm;
+    border-radius: 2mm; display: grid; place-items: center;
+  }
+  .qr .frame span {
+    background: #fff; padding: 1mm 2mm; border-radius: 1mm;
+    font-weight: 800; font-size: 7pt;
+  }
+
+  .micro {
+    font-size: 7.5pt; color: #64748b; line-height: 1.55;
+    padding: 3mm 14mm 0;
+  }
+
+  @media screen {
+    body { padding: 10mm 0 30mm; }
+  }
+  @media print {
+    body { background: #fff; }
+    .sheet { margin: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <div class="top">
+    <span class="tag">こども むけ</span>
+    <div class="emojis">🎮 🎥 🎁</div>
+    <h1>ゲームで あそんで<br/>
+      <span class="hl">アマゾン ギフト</span> が もらえる！</h1>
+    <p class="lead">
+      すきな ゲームを いつものように あそんで、<br/>
+      がめんの どうがを おくるだけ。<br/>
+      おうちのひとと いっしょに はじめよう。
+    </p>
+  </div>
+
+  <div class="price-wrap">
+    <div class="price">
+      <div>
+        <div class="gift">🎁</div>
+        <div class="big">1h ＝ ¥100</div>
+        <div class="unit">Amazon ギフト カード</div>
+        <div class="sub">10じかん で 1,000円ぶん！</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <h2><span class="pen">やりかた</span> は 4 ステップ</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="n">1</span>
+        <h3>とうろく</h3>
+        <span class="icon">👨‍👩‍👧</span>
+        <p>おうちのひとと もうしこみ</p>
+      </div>
+      <div class="step">
+        <span class="n">2</span>
+        <h3>ゲームを えらぶ</h3>
+        <span class="icon">🕹️</span>
+        <p>ねんれいに あった タイトルだけ</p>
+      </div>
+      <div class="step">
+        <span class="n">3</span>
+        <h3>あそんで ろくが</h3>
+        <span class="icon">📱</span>
+        <p>がめんを しゅうろく</p>
+      </div>
+      <div class="step">
+        <span class="n">4</span>
+        <h3>おくる＆ごほうび</h3>
+        <span class="icon">💌</span>
+        <p>OK なら ギフト カード</p>
+      </div>
+    </div>
+
+    <div class="rules">
+      <h3>✨ こどもの おやくそく</h3>
+      <ul>
+        <li>おうちのひとの <b>OK</b> を もらってから はじめる</li>
+        <li>1日 <b>2じかん</b> まで。しゅくだい と ねる時間 が さき</li>
+        <li>なまえ・がっこう・じゅうしょ・かお は うつさない</li>
+        <li>しらないひとと ボイスチャット しない</li>
+        <li>チート・かいぞうデータ は つかわない</li>
+      </ul>
+    </div>
+
+    <div class="parent">
+      <h3>👨‍👩‍👧 保護者の方へ（必ずお読みください）</h3>
+      <p>本サービスはお子さま（おおむね 8〜17 歳）を対象としますが、<b>保護者の方の同意と立ち会いのもと</b>でのみご利用いただけます。契約当事者は保護者の方です。</p>
+      <p>・1日 <b>2 時間</b> / 週 <b>10 時間</b> 上限（システム自動制御）／ 深夜帯 21:00〜翌 7:00 は予約不可。<br/>
+      ・Amazon ギフトは <b>保護者メール</b> 宛に配布。動画に本人・家族・学校・住所等が映り込む場合は自動検出し再提出依頼。<br/>
+      ・CERO A / B 等 年齢適合タイトルのみ表示。<b>労働基準法の年少者規制・児童の権利に関する条約</b> の趣旨に沿って運営。<br/>
+      ・同意内容・プライバシー方針: <b>hc.etzhayyim.com/legal/minor-consent</b>　お問い合わせ: <b>support@etzhayyim.com</b></p>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div>
+      <h3>🎮 おうちのひと と はじめよう</h3>
+      <p>スマホ でも パソコン でも OK。とうろくは やく 3 ぷん。</p>
+      <span class="url">https://hc.etzhayyim.com/register?ref=game-play-uploader-minor</span>
+      <div style="font-size:8.5pt;color:#1e3a5f;margin-top:3mm">
+        うんえい: amanomibashira (しゅうきょうほうじん・にんいだんたい・ブロックチェーンとうき) ／ game-play-uploader.etzhayyim.com
+      </div>
+    </div>
+    <div class="qr"><div class="frame"><span>QR</span></div></div>
+  </div>
+</div>
+
+<div class="micro">
+  © amanomibashira — game-play-uploader.etzhayyim.com ／ 本書の内容は予告なく変更される場合があります。単価・上限時間は hc.etzhayyim.com の最新情報が優先します。
+</div>
+
+</body>
+</html>

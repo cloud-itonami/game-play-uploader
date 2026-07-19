@@ -1,0 +1,16 @@
+{
+  "name": "etzhayyim-wasm-game-play-uploader-gm3pup1d",
+  "version": "1.0.0",
+  "description": "TS-native runtime component — game-play-uploader LP",
+  "main": "src/app.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  }
+}

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ゲームであそんで、アマゾンギフトがもらえる！｜こどもむけ</title>
+<meta name="description" content="すきなゲームをあそんで、どうがをおくると、1時間100円ぶんのAmazonギフトがもらえるよ。おうちのひとといっしょに、あんぜんにはじめよう。" />
+<style>
+  :root{
+    --bg:#fff8ec; --sun:#ffd23f; --pink:#ff7ab6; --blue:#4cc2ff; --mint:#7ee8b8;
+    --ink:#2a1d4a; --soft:#5a4c7a; --line:#ffe6c2; --panel:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Maru Gothic ProN","Rounded Mplus 1c","M PLUS Rounded 1c","Noto Sans JP",system-ui,sans-serif;
+    line-height:1.8;-webkit-font-smoothing:antialiased}
+  a{color:#1c7ed6}
+  .wrap{max-width:920px;margin:0 auto;padding:0 18px}
+  header{padding:16px 0}
+  header .wrap{display:flex;align-items:center;justify-content:space-between}
+  .brand{font-weight:800;font-size:18px}
+  .brand .emoji{font-size:24px;margin-right:6px}
+  .tag{background:var(--sun);color:var(--ink);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800}
+  .cta{display:inline-block;padding:14px 24px;background:var(--pink);color:#fff;border-radius:999px;font-weight:800;font-size:18px;box-shadow:0 6px 0 #d8589a;transition:transform .05s}
+  .cta:hover{transform:translateY(1px);box-shadow:0 5px 0 #d8589a}
+  .cta.blue{background:var(--blue);box-shadow:0 6px 0 #2a9dd4}
+  .cta.blue:hover{box-shadow:0 5px 0 #2a9dd4}
+  .cta.ghost{background:#fff;color:var(--ink);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+  .hero{padding:40px 0 10px;text-align:center}
+  .hero h1{font-size:40px;line-height:1.2;margin:0 0 14px}
+  .hero h1 .highlight{background:linear-gradient(transparent 60%, var(--sun) 60%)}
+  .hero p.lead{font-size:18px;color:var(--soft);margin:0 auto 24px;max-width:640px}
+  .hero .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .emoji-row{font-size:40px;margin:20px 0 10px;letter-spacing:8px}
+  section{padding:36px 0}
+  h2{font-size:26px;margin:0 0 10px;text-align:center}
+  h2 .pen{background:linear-gradient(transparent 60%, var(--mint) 60%)}
+  .sub{text-align:center;color:var(--soft);margin:0 auto 24px;max-width:640px}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:760px){.steps{grid-template-columns:1fr 1fr}.hero h1{font-size:30px}}
+  .step{background:var(--panel);border:3px solid var(--line);border-radius:22px;padding:18px;text-align:center}
+  .step .n{display:inline-block;width:42px;height:42px;border-radius:50%;background:var(--sun);color:var(--ink);font-weight:900;font-size:22px;line-height:42px;margin-bottom:8px}
+  .step h3{margin:6px 0 4px;font-size:16px}
+  .step p{margin:0;color:var(--soft);font-size:13px}
+  .reward{background:linear-gradient(135deg,#fff3c4,#ffe6a7);border:3px dashed #e6a800;border-radius:24px;padding:28px;text-align:center}
+  .reward .big{font-size:56px;font-weight:900;color:#b55f00}
+  .reward .small{color:var(--soft)}
+  .rules{background:#eaf7ff;border:3px solid #b9e4ff;border-radius:22px;padding:20px}
+  .rules h3{margin:0 0 10px;color:#0a5a88}
+  .rules ul{margin:0;padding-left:20px}
+  .rules li{margin:6px 0}
+  .parent{background:#fff0f5;border:3px solid #ffc4de;border-radius:22px;padding:22px}
+  .parent h3{margin:0 0 8px;color:#a0306b}
+  .parent p{margin:8px 0;color:var(--soft)}
+  details{background:#fff;border:3px solid var(--line);border-radius:18px;padding:14px 16px;margin:10px 0}
+  summary{cursor:pointer;font-weight:800}
+  details[open]{background:#fffdf5}
+  footer{padding:30px 0 40px;text-align:center;color:var(--soft);font-size:13px}
+  .cloud{position:relative}
+  .safe-badge{display:inline-flex;align-items:center;gap:6px;background:#e8f9ef;color:#22663a;border:2px solid #b9ebc9;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;margin:4px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand"><span class="emoji">🎮</span>ゲームプレイ あげて ギフト！</div>
+    <span class="tag">こどもむけ</span>
+  </div>
+</header>
+
+<div class="wrap hero">
+  <div class="emoji-row">🎮 🎥 🎁</div>
+  <h1>ゲームをあそんで<br/>
+    <span class="highlight">どうが</span>を おくると<br/>
+    <span class="highlight">アマゾンギフト</span>が もらえる！</h1>
+  <p class="lead">
+    すきなゲームを、いつものように あそんで、<br/>
+    その どうがを アップロードするだけ。<br/>
+    <b>1じかん で 100円ぶん</b> の Amazon ギフトが もらえるよ。
+  </p>
+  <div class="actions">
+    <a class="cta" href="#apply">はじめる（おうちのひとと）</a>
+    <a class="cta ghost" href="#how">やりかたを みる</a>
+  </div>
+  <div style="margin-top:20px">
+    <span class="safe-badge">🛡 かおは うつさなくて OK</span>
+    <span class="safe-badge">🛡 なまえも うつさなくて OK</span>
+    <span class="safe-badge">🛡 おうちのひとの OK が ひつよう</span>
+  </div>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <h2><span class="pen">やりかた</span> は 4ステップ</h2>
+    <p class="sub">かんたんだよ。わからないときは おうちのひと に きいてね。</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>とうろく</h3>
+        <p>おうちのひとと いっしょに もうしこみ。</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>ゲームをえらぶ</h3>
+        <p>ぼしゅうちゅうの ゲームから すきなものを。</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>あそんで ろくが</h3>
+        <p>いつもどおり プレイ。がめんを ろくが するよ。</p>
+      </div>
+      <div class="step">
+        <div class="n">4</div>
+        <h3>おくる＆ごほうび</h3>
+        <p>OK だったら ギフトコードが とどく！</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="reward">
+      <div>🎁</div>
+      <div class="big">1じかん ＝ ¥100</div>
+      <div class="small">Amazon ギフト カード（でんし）で おくるよ。<br/>
+        10じかん あそんだら 1,000円ぶん！</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="pen">おやくそく</span></h2>
+    <p class="sub">みんなが あんしんして つかえるように、だいじな ルールがあるよ。</p>
+    <div class="rules">
+      <h3>✨ こどもの おやくそく</h3>
+      <ul>
+        <li>おうちのひとの <b>OK</b> を もらってから はじめる。</li>
+        <li>1日に <b>2じかん</b> まで。しゅくだいと ねる時間が さきだよ。</li>
+        <li>ろくがに <b>なまえ・がっこう・じゅうしょ</b> を うつさない。</li>
+        <li>ボイスチャットで しらないひとに こたえない。</li>
+        <li>チート・かいぞうデータは つかわない。</li>
+        <li>むずかしい ことが おきたら、すぐ おうちのひとに そうだん。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="parent">
+      <h3>👨‍👩‍👧 保護者の方へ（かならずお読みください）</h3>
+      <p>本サービスは <b>お子さま（おおむね 8〜17 歳）</b> を対象としていますが、
+      <b>保護者の方の同意と立ち会いのもと</b> でのみご利用いただけます。</p>
+      <p>・契約当事者は <b>保護者の方</b> です。Amazonギフトは保護者登録メール宛に配布します。<br/>
+      ・1日の上限は <b>2時間</b>、週の上限は <b>10時間</b> に制限しています（システム側で自動）。<br/>
+      ・深夜帯（21:00〜翌7:00）のタスク予約はできません。<br/>
+      ・アップロード動画に本人・家族・学校・住所等が映り込む場合、当該部分は自動で検出し再提出をお願いします。<br/>
+      ・本サービスは国内の <b>労働基準法・年少者規制・児童の権利に関する条約</b> の趣旨に沿って運営します。<br/>
+      ・同意内容・プライバシー方針は <a href="https://hc.etzhayyim.com/legal/minor-consent">こちら</a>。</p>
+      <p>ご不明な点は <a href="mailto:support@etzhayyim.com">support@etzhayyim.com</a> までお問い合わせください。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="pen">よくある しつもん</span></h2>
+    <details><summary>どんなゲームでも いいの？</summary>
+      <p>ぼしゅうちゅう の ゲームから えらぶよ。年れい制限（CERO A・B など）に あった ゲームだけが ひょうじ されるから、あんしんしてね。</p>
+    </details>
+    <details><summary>かおや こえ は はいれたほうがいい？</summary>
+      <p>ううん、<b>いれなくて OK</b>。がめんの ろくが だけで じゅうぶん です。</p>
+    </details>
+    <details><summary>ろくがは どうやって する？</summary>
+      <p>Switch / PS の 「シェア」ボタン、スマホの 「がめん しゅうろく」、PC の OBS などで できるよ。
+      おうちのひとと いっしょに せっていしよう。</p>
+    </details>
+    <details><summary>おかねは いつ もらえる？</summary>
+      <p>ろくがが OK だったあと、<b>1〜7日</b> くらいで、Amazon ギフト コード が メールで とどくよ。</p>
+    </details>
+    <details><summary>やめたく なったら？</summary>
+      <p>いつでも やめられるよ。おうちのひとが <a href="https://hc.etzhayyim.com">hc.etzhayyim.com</a> で たいかい できます。</p>
+    </details>
+  </div>
+</section>
+
+<section id="apply">
+  <div class="wrap" style="text-align:center">
+    <h2><span class="pen">はじめる</span></h2>
+    <p class="sub">おうちのひと と いっしょに、とうろく ページへ すすんでね。</p>
+    <p>
+      <a class="cta blue" href="https://hc.etzhayyim.com/register?ref=game-play-uploader-minor">おうちのひとと はじめる</a>
+    </p>
+    <p style="color:var(--soft);font-size:13px;margin-top:18px">
+      このページは こども向け の あんないです。18さい いじょうの かた は
+      <a href="./adult.html">おとな向け ページ</a> へ。
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    © amanomibashira — game-play-uploader.etzhayyim.com ／ うんえい：amanomibashira (しゅうきょうほうじん・にんいだんたい・ブロックチェーンとうき)
+  </div>
+</footer>
+</body>
+</html>

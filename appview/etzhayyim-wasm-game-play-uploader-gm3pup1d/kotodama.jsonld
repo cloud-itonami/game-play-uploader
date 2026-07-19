@@ -1,0 +1,102 @@
+{
+  "@context": "https://etzhayyim.com/ns/kotodama/v1",
+  "@id": "did:web:game-play-uploader.etzhayyim.com",
+  "component": {
+    "build": {
+      "command": "pnpm typecheck",
+      "entrypoint": "src/app.ts"
+    },
+    "env": {
+      "DISPATCHER_URL": "https://dispatcher.etzhayyim.com"
+    },
+    "framework": "ts-thin-edge",
+    "path": "src/app.ts"
+  },
+  "convoSystemPrompt": "You are the Game Play Uploader agent. Recruit players to upload gameplay videos in exchange for Amazon gift cards (¥100/hour) via hc.etzhayyim.com. Respond helpfully in the user's language.",
+  "deploy": {},
+  "duties": [
+    "勤労の義務"
+  ],
+  "governance": {
+    "raci": "responsible",
+    "classification": "public",
+    "complianceFrameworks": [
+      "game-play-uploader-policy"
+    ]
+  },
+  "kpi": [
+    "credits の獲得"
+  ],
+  "name": "etzhayyim-wasm-game-play-uploader",
+  "nanoid": "gm3pup1d",
+  "performerType": "service",
+  "pool": {},
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "bpmn-dispatch",
+      "gameplay-upload-campaign",
+      "reward-estimation",
+      "domain-query"
+    ],
+    "description": "Game Play Uploader — recruits players to upload gameplay videos (domain coverage dataset) in exchange for Amazon gift cards at ¥100/hour, via hc.etzhayyim.com",
+    "displayName": "Game Play Uploader",
+    "isBot": true,
+    "operator": "etzhayyim.com"
+  },
+  "project": "game-play-uploader",
+  "routes": [
+    {
+      "host": "game-play-uploader.etzhayyim.com",
+      "paths": [
+        "/"
+      ],
+      "tls": true
+    }
+  ],
+  "runtimeType": "worker",
+  "space": {
+    "channels": [
+      {
+        "default": true,
+        "kind": "public",
+        "name": "gm3pup1d-feed"
+      }
+    ],
+    "joinRule": "public",
+    "name": "GamePlayUploader"
+  },
+  "triggers": {
+    "http": {
+      "listen": "0.0.0.0:8080",
+      "routes": [
+        "/",
+        "/kids",
+        "/adult-print",
+        "/kids-print",
+        "/health",
+        "/healthz",
+        "/readyz"
+      ],
+      "staticDir": "/wasm/svelte/build",
+      "spa": false
+    },
+    "subscribeRepos": {
+      "collections": [
+        "app.bsky.feed.post",
+        "app.bsky.feed.like",
+        "app.bsky.feed.repost",
+        "app.bsky.graph.follow"
+      ]
+    }
+  },
+  "ui": {
+    "accent": "#3ee6a5",
+    "icon": "🎮"
+  },
+  "uiType": "appview",
+  "yata": {
+    "dataDir": "/data/yata",
+    "graphUri": "/data/graph"
+  }
+}

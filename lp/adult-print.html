@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>ゲームプレイ動画 協力者募集｜大人向けA4チラシ</title>
+<style>
+  /* =========================
+     A4 print sheet (210 × 297 mm)
+     Chrome/Safari: ファイル → 印刷 → 「PDFに保存」
+     余白: なし / 背景グラフィック: ON / 用紙: A4
+     ========================= */
+  @page { size: A4 portrait; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    color: #111827;
+    background: #e5e7eb;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sheet {
+    width: 210mm; height: 297mm;
+    margin: 10mm auto;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+  .sheet:last-of-type { page-break-after: auto; }
+
+  /* Hero band */
+  .hero {
+    background: linear-gradient(135deg, #0b1220 0%, #0f2133 60%, #134e4a 100%);
+    color: #fff;
+    padding: 14mm 14mm 10mm;
+    position: relative;
+  }
+  .hero::after {
+    content: ""; position: absolute; right: -40mm; top: -40mm;
+    width: 110mm; height: 110mm; border-radius: 50%;
+    background: radial-gradient(circle, rgba(62,230,165,.35), transparent 70%);
+  }
+  .tag {
+    display: inline-block; font-size: 10pt; letter-spacing: .12em;
+    background: #3ee6a5; color: #063027; padding: 2mm 4mm;
+    border-radius: 999px; font-weight: 800;
+  }
+  h1 {
+    font-size: 30pt; line-height: 1.25; margin: 6mm 0 4mm;
+    font-weight: 900; letter-spacing: .01em;
+  }
+  h1 .accent { color: #3ee6a5; }
+  .hero p.lead {
+    font-size: 11pt; line-height: 1.75; margin: 0; color: #cbd5e1;
+    max-width: 160mm;
+  }
+
+  /* Price strip */
+  .price {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8mm 14mm; background: #fff7ed;
+    border-top: 1mm solid #fdba74;
+    border-bottom: 1mm solid #fdba74;
+  }
+  .price .big {
+    font-size: 44pt; font-weight: 900; color: #b45309; line-height: 1;
+    font-family: "Hiragino Kaku Gothic ProN", sans-serif;
+  }
+  .price .big small { font-size: 14pt; color: #78350f; font-weight: 700; margin-left: 2mm; }
+  .price .note {
+    font-size: 10pt; line-height: 1.7; color: #78350f; max-width: 90mm; text-align: right;
+  }
+
+  /* Body */
+  .body { padding: 8mm 14mm; }
+  h2 {
+    font-size: 14pt; margin: 6mm 0 3mm; font-weight: 800;
+    border-left: 2mm solid #3ee6a5; padding-left: 3mm; color: #0f172a;
+  }
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm;
+    margin-top: 3mm;
+  }
+  .step {
+    border: .3mm solid #cbd5e1; border-radius: 2mm; padding: 3mm;
+    background: #f8fafc;
+  }
+  .step .n {
+    display: inline-block; width: 7mm; height: 7mm; line-height: 7mm;
+    background: #0f172a; color: #fff; border-radius: 50%;
+    text-align: center; font-weight: 900; font-size: 10pt;
+  }
+  .step h3 { margin: 2mm 0 1mm; font-size: 10pt; }
+  .step p { margin: 0; font-size: 8.5pt; color: #475569; line-height: 1.55; }
+
+  .cols {
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 6mm; margin-top: 3mm;
+  }
+  .list { margin: 0; padding: 0; list-style: none; }
+  .list li {
+    padding: 2mm 0 2mm 6mm; border-bottom: .15mm dashed #cbd5e1;
+    font-size: 10pt; line-height: 1.55; position: relative;
+  }
+  .list li::before {
+    content: "✓"; position: absolute; left: 0; top: 2mm;
+    color: #3ee6a5; font-weight: 900;
+  }
+
+  .req {
+    background: #f1f5f9; border-left: 1mm solid #0ea5e9;
+    padding: 3mm 4mm; font-size: 9.5pt; line-height: 1.7; color: #0f172a;
+    border-radius: 0 2mm 2mm 0;
+  }
+  .req b { color: #0c4a6e; }
+
+  /* CTA / QR strip */
+  .cta {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 8mm 14mm;
+    background: #0f172a; color: #fff;
+    display: grid; grid-template-columns: 1fr 32mm; gap: 6mm; align-items: center;
+  }
+  .cta h3 { margin: 0 0 2mm; font-size: 14pt; }
+  .cta p { margin: 0; font-size: 9.5pt; line-height: 1.6; color: #cbd5e1; }
+  .cta .url {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: #3ee6a5; color: #063027; padding: 2mm 3mm; border-radius: 1.5mm;
+    font-weight: 800; font-size: 10pt; display: inline-block; margin-top: 2mm;
+  }
+  .qr {
+    width: 32mm; height: 32mm; background: #fff;
+    display: grid; place-items: center; text-align: center;
+    color: #0f172a; font-size: 7pt; line-height: 1.3; border-radius: 2mm;
+    padding: 2mm;
+  }
+  .qr .frame {
+    width: 100%; height: 100%;
+    background:
+      linear-gradient(#0f172a 0 0) top/100% .8mm no-repeat,
+      linear-gradient(#0f172a 0 0) bottom/100% .8mm no-repeat,
+      linear-gradient(#0f172a 0 0) left/.8mm 100% no-repeat,
+      linear-gradient(#0f172a 0 0) right/.8mm 100% no-repeat,
+      repeating-conic-gradient(#0f172a 0% 25%, #fff 25% 50%) 0/3mm 3mm;
+    border-radius: 1mm;
+    display: grid; place-items: center;
+  }
+  .qr .frame span {
+    background: #fff; padding: 1mm 2mm; border-radius: 1mm;
+    font-weight: 800; font-size: 7pt;
+  }
+
+  /* Footer micro-print */
+  .micro {
+    font-size: 7.5pt; color: #64748b; line-height: 1.55;
+    padding: 3mm 14mm 0;
+  }
+
+  @media screen {
+    body { padding: 10mm 0 30mm; }
+  }
+  @media print {
+    body { background: #fff; }
+    .sheet { margin: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <div class="hero">
+    <span class="tag">PLAYER WANTED</span>
+    <h1>ゲームを<br/>
+      いつも通り遊ぶだけで、<br/>
+      <span class="accent">1時間 ＝ 100円分</span> の Amazon ギフト。</h1>
+    <p class="lead">
+      家庭用ゲーム機・PCゲーム・スマホゲーム、プレイ動画のアップロード協力者を募集しています。
+      AI Agent 学習用のドメインカバレッジ研究（ゲームジャンル／シーン／操作パターンの網羅）に参加いただける方を対象に、
+      正味プレイ時間に応じて Amazon ギフトカードをお渡しします。
+    </p>
+  </div>
+
+  <div class="price">
+    <div>
+      <div class="big">¥100<small>／時間</small></div>
+      <div style="font-size:9pt;color:#78350f;margin-top:2mm">
+        レアジャンル・長時間セッション・多言語ボイス等は <b>1.5〜3倍</b>
+      </div>
+    </div>
+    <div class="note">
+      正味プレイ時間＝タイトル画面・ポーズ・待機等を除いた実プレイ時間。<br/>
+      ジャンル別単価は <b>hc.etzhayyim.com/tasks</b> で随時更新。
+    </div>
+  </div>
+
+  <div class="body">
+    <h2>応募から受取まで 4 ステップ</h2>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h3>登録 / 本人確認</h3><p>hc.etzhayyim.com でワーカー登録。KYC を完了。</p></div>
+      <div class="step"><span class="n">2</span><h3>タスク予約</h3><p>タイトル・ジャンル・求めるシーンを選ぶ。</p></div>
+      <div class="step"><span class="n">3</span><h3>プレイ＆録画</h3><p>OBS / PS Share / Switch / スマホ内蔵録画。1080p / 30fps 以上推奨。</p></div>
+      <div class="step"><span class="n">4</span><h3>提出 → 報酬</h3><p>承認後、Amazon ギフトコード（電子）を配布。1〜7 営業日。</p></div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h2>募集ジャンル（例）</h2>
+        <ul class="list">
+          <li>RPG / JRPG — 序盤チュートリアル、エンドコンテンツ、日英ボイス</li>
+          <li>FPS / TPS — カジュアル〜高ランク、ミニマップ操作の多いタイトル</li>
+          <li>格闘ゲーム — トレモ・対戦・コンボレシピ確認</li>
+          <li>リズム・音ゲー — 難易度別譜面、指／スティック両対応</li>
+          <li>サンドボックス — Minecraft 系、建築・探索・戦闘ロングセッション</li>
+          <li>レトロ・ニッチ・インディーズ — 高単価になりやすい</li>
+        </ul>
+      </div>
+      <div>
+        <h2>対応プラットフォーム</h2>
+        <ul class="list">
+          <li>PC（Windows / macOS / Linux）</li>
+          <li>PS5 / PS4 / Switch / Xbox</li>
+          <li>iOS / Android スマホ</li>
+          <li>Quest / PSVR2 等 VR</li>
+        </ul>
+        <h2 style="margin-top:5mm">応募条件</h2>
+        <ul class="list">
+          <li>18 歳以上</li>
+          <li>週 40 時間・1 日 8 時間以内（労基法）</li>
+          <li>実名・住所等 PII の映り込み不可</li>
+          <li>チート・未許諾 MOD は不可</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="req" style="margin-top:5mm">
+      <b>用途：</b> 収集された動画は AI Agent のゲーム操作理解・映像理解の研究用素材として利用します。
+      特定個人の識別目的には使用しません。詳細は応募時の <b>Worker Agreement</b> 及び <b>アップロード同意書</b>（準拠法：日本法／専属管轄：東京地方裁判所）をご確認ください。
+    </div>
+  </div>
+
+  <div class="cta">
+    <div>
+      <h3>今すぐ応募</h3>
+      <p>スマホ / PC のブラウザから登録 1 分。審査通過後すぐタスク予約が可能です。</p>
+      <span class="url">https://hc.etzhayyim.com/register?ref=game-play-uploader</span>
+      <div style="font-size:8.5pt;color:#94a3b8;margin-top:3mm">お問い合わせ: support@etzhayyim.com　／　運営: amanomibashira (宗教法人・任意団体・blockchain 登記)</div>
+    </div>
+    <div class="qr"><div class="frame"><span>QR</span></div></div>
+  </div>
+</div>
+
+<div class="micro">
+  © amanomibashira — game-play-uploader.etzhayyim.com ／ 本書の内容は予告なく変更される場合があります。単価・上限時間は hc.etzhayyim.com の最新情報が優先します。
+</div>
+
+</body>
+</html>
