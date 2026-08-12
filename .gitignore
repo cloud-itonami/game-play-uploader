@@ -1,0 +1,6 @@
+# Build output produced by docs/operator-quickstart.md steps 2-3 and 5.
+# Without these, following the quickstart leaves ~200MB of untracked noise in
+# `git status` and invites committing node_modules.
+node_modules/
+.svelte-kit/
+.wrangler/
