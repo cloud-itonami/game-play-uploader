@@ -24,7 +24,7 @@ landed on (`9f30c92`):
 | `game-play-uploader.etzhayyim.com` | `wrangler.jsonc` route, `kotodama.jsonld` | **NXDOMAIN** |
 | `gm3pup1d.etzhayyim.com` | `wrangler.jsonc` route, `APP_EMBED_URL` | **NXDOMAIN** |
 | `dispatcher.etzhayyim.com` | `src/app.ts` upstream, `kotodama.jsonld` env | **NXDOMAIN** |
-| `mcp.etzhayyim.com` | `AGENTGATEWAY_MCP_ROUTER_URL`, the deployed BFF's upstream | **NXDOMAIN** |
+| `mcp.etzhayyim.com` | `AGENTGATEWAY_MCP_ROUTER_URL`, `src/xrpc-proxy.ts` (preserved, unwired — see piece 2) | **NXDOMAIN** |
 | `hc.etzhayyim.com` | **every call-to-action on all four landing pages** | **NXDOMAIN** |
 
 The parent zone resolves and the measuring host's network was fine (a control
@@ -32,12 +32,24 @@ request to an unrelated host returned 200), so these are genuine absences, not a
 local DNS failure. Re-measure before trusting this table:
 `nbb docs/check-surface.cljs` (see the quickstart).
 
+**2026-09-07: the frontend moved from SvelteKit to ClojureScript** (reagent +
+re-frame + jp-go-dds, ADR-2608260900) — see piece 2 below. This is a build/UI
+change, not a DNS change: none of the hosts above were touched by it, and this
+table has not been re-measured against the new tip. What *did* change is which
+file cites `mcp.etzhayyim.com` (updated in the row above) and how `/xrpc/*` is
+handled, noted below.
+
 The consequences are concrete:
 
 - **The app is not deployed.** Neither route host exists.
-- **Both upstreams are absent**, so the `/xrpc/*` path cannot succeed even
-  locally — a local `POST /xrpc/...` returns `500 {"message":"Internal Error"}`,
-  which is the upstream fetch failing, not a bug in the route.
+- **The `/xrpc/*` path has no handler at all as of the cljs migration** —
+  `wrangler.jsonc` no longer declares a `main` Worker script (see piece 1), so
+  the only thing served is static assets from `cljs/public`. Before the
+  migration, a local `POST /xrpc/...` against the SvelteKit BFF returned
+  `500 {"message":"Internal Error"}` (the upstream fetch failing, not a bug in
+  the route). That route no longer exists to fail in the first place; a
+  request to it today would get whatever `not_found_handling` the asset
+  binding does with a non-file path.
 - **The funnel has no floor.** Every "登録する" button on every landing page
   points at `hc.etzhayyim.com`, which does not exist. If the surface were
   deployed as-is, every visitor who accepted the offer would land on nothing.
@@ -53,46 +65,75 @@ Four separable pieces. Only the second one is deployed.
 
 A Worker handler that answers `/health` `/healthz` `/readyz` `/_app/meta` and
 proxies `/xrpc/com.etzhayyim.apps.gamePlayUploader.*` to
-`dispatcher.etzhayyim.com`, attaching an `x-internal-trust` secret.
+`dispatcher.etzhayyim.com`, attaching an `x-internal-trust` secret. It falls
+back to `env.ASSETS.fetch(req)` for anything else, so it *could* front the
+static frontend in piece 2 as well as the API — see the note below.
 
 It typechecks (`pnpm typecheck`, exit 0) and `tsconfig.json` scopes `tsc` to
 exactly this file — so the check is real and it discriminates (breaking the
 return type of `internalTrustSecret` produces `TS2322` at its call site and
 returns).
 
-**But `wrangler.jsonc` sets `main` to the SvelteKit build output, not this
-file.** Verified against a real build: the deploy closure
-(`.svelte-kit/cloudflare/` + `.svelte-kit/output/`) contains **none** of
-`dispatcher.etzhayyim.com`, `com.etzhayyim.apps.gamePlayUploader`, or
-`x-internal-trust`, and **does** contain the SvelteKit BFF's
-`mcp.etzhayyim.com`, `sveltekit-edge-bff`, `x-etzhayyim-xrpc-method`.
+**`wrangler.jsonc` no longer sets `main` to anything** (changed 2026-09-07,
+cljs migration). It previously pointed at the SvelteKit adapter's build output
+(`svelte/.svelte-kit/cloudflare/_worker.js`), which disagreed with this file —
+verified against a real build at the time: the deploy closure contained
+**none** of `dispatcher.etzhayyim.com`, `com.etzhayyim.apps.gamePlayUploader`,
+or `x-internal-trust`, and **did** contain the SvelteKit BFF's
+`mcp.etzhayyim.com`, `sveltekit-edge-bff`, `x-etzhayyim-xrpc-method`. That build
+output is gone now (so is the disagreement it caused), but the underlying
+question was never answered — this migration explicitly did **not** repoint
+`main` at this file even though it now could (see the comment in
+`wrangler.jsonc`), because doing so is the same "which entrypoint is
+authoritative" decision the old divergence table asked, and a build-tooling
+migration is not licence to make a product decision silently.
 
-So this file is typechecked, committed, and never shipped. `kotodama.jsonld`
-disagrees with `wrangler.jsonc` about which entrypoint is authoritative:
+So this file is typechecked, committed, and (still) never shipped.
+`kotodama.jsonld` names it as authoritative (`component.entrypoint`,
+`framework: ts-thin-edge`) while `wrangler.jsonc` now names no Worker script at
+all — assets only:
 
 | declares | entrypoint | framework | `/xrpc` upstream |
 |---|---|---|---|
 | `kotodama.jsonld` | `src/app.ts` | `ts-thin-edge` | `dispatcher.etzhayyim.com` |
-| `wrangler.jsonc` | `svelte/.svelte-kit/cloudflare/_worker.js` | `sveltekit-edge-bff` | `mcp.etzhayyim.com` |
+| `wrangler.jsonc` | *(none — static assets from `cljs/public`)* | `cljs-reagent-re-frame-jp-go-dds` | *(none)* |
 
 **This divergence is recorded, not repaired.** Resolving it means deciding which
 entrypoint is authoritative, and that decision changes what the app *does* — it
 is not a documentation change.
 
-### 2. `appview/…/svelte/` — the SvelteKit BFF that **is** deployed
+### 2. `appview/…/cljs/` — a static info page, not a BFF (changed 2026-09-07)
 
-Two routes: `/` and `/xrpc/[...path]`. The latter wraps the request as a
-JSON-RPC `tools/call` and forwards it to the MCP router.
+Through 2026-09-06 this repo shipped a SvelteKit BFF here
+(`appview/…/svelte/`) with two routes: `/` and `/xrpc/[...path]`, the latter
+proxying XRPC calls to the MCP router. **The Svelte → ClojureScript migration
+(ADR-2608260900) removed the SvelteKit build and, with it, the server-side
+`/xrpc/[...path]` handler** — `wrangler.jsonc` no longer names a Worker
+script, so nothing answers that path today (see the Status section above). The
+handler's code was not deleted: it was moved unmodified to
+`appview/…/src/xrpc-proxy.ts` with a `SVELTEKIT-BACKEND-PRESERVED` marker,
+because it is backend/XRPC logic, not frontend markup — but it imports
+SvelteKit-only symbols and there is no SvelteKit build left to host it, so it
+does not run. Reviving `/xrpc/*` (via this file, `src/app.ts`, or something
+else) is the entrypoint decision piece 1 describes, not something this
+migration resolved.
 
-`/` serves a **generated scaffold placeholder**, not the campaign. Verified by
-running the production build locally: the page title is the package name
+`/` still serves the same **generated scaffold placeholder** it always did,
+now built from `cljs/` (reagent + re-frame + jp-go-dds) instead of SvelteKit —
+ported field-for-field from the old `+page.svelte`, including its stale-looking
+but accurate self-description: the page title is the package name
 (`etzhayyim-wasm-game-play-uploader-gm3pup1d`) and the body reads *"No public
-route is declared next to this app surface."*
+route is declared next to this app surface."* This was not re-verified against
+a running preview as part of the migration (see the "Not run" note in the
+quickstart); what *was* verified is that `npx shadow-cljs compile app` and
+`compile test` + `node out/tests.js` both pass (0 warnings; 5 tests, 14
+assertions, 0 failures/errors).
 
-The routes `kotodama.jsonld` advertises under `triggers.http.routes` are mostly
-not implemented by the thing that ships. Measured against the built app:
+The routes `kotodama.jsonld` advertises under `triggers.http.routes` were
+already mostly unimplemented by the SvelteKit build and remain so — this
+migration is frontend-tooling-only and did not add routes:
 
-| path | declared in `kotodama.jsonld` | actual |
+| path | declared in `kotodama.jsonld` | actual (as of the last SvelteKit build, 2026-08-12) |
 |---|---|---|
 | `/` | yes | **200** (scaffold placeholder) |
 | `/health` `/healthz` `/readyz` | yes | **404** — implemented only in the undeployed `src/app.ts` |

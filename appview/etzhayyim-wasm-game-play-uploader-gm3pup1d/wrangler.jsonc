@@ -1,12 +1,24 @@
 {
   "name": "kotodama-gm3pup1d",
-  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
+  // "main" dropped: it pointed at the SvelteKit Cloudflare adapter's build
+  // output (svelte/.svelte-kit/cloudflare/_worker.js), which no longer
+  // exists after the Svelte → ClojureScript frontend migration (see
+  // ../cljs/). "../src/app.ts" (the documented-but-undeployed dispatcher
+  // facade — see README "Where the logic actually lives" / entrypoint
+  // divergence table) does call `env.ASSETS.fetch()`, but repointing `main`
+  // at it is the same unresolved product decision the README already
+  // flags ("Resolving it means deciding which entrypoint is authoritative,
+  // and that decision changes what the app *does* — it is not a
+  // documentation change"), so this migration leaves it undone rather than
+  // making that call implicitly via a config edit. Frontend is served as
+  // plain static assets instead (see "assets" below). UNVERIFIED: no
+  // `wrangler deploy`/`dev` was run as part of this migration.
   "compatibility_date": "2025-03-17",
   "compatibility_flags": [
     "nodejs_compat"
   ],
   "assets": {
-    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "directory": "./cljs/public",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
@@ -16,7 +28,7 @@
     "APP_DESCRIPTION": "Game Play Uploader — recruits players to upload gameplay videos in exchange for Amazon gift cards at ¥100/hour via hc.etzhayyim.com",
     "APP_DISPLAY_NAME": "Game Play Uploader",
     "APP_EMBED_URL": "https://gm3pup1d.etzhayyim.com/?embed=1",
-    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_FRAMEWORK": "cljs-reagent-re-frame-jp-go-dds",
     "APP_NANOID": "gm3pup1d",
     "APP_PERFORMER_TYPE": "service",
     "APP_UI_TYPE": "appview",

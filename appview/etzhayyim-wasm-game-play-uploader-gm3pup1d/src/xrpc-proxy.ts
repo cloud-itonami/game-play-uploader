@@ -1,3 +1,11 @@
+// SVELTEKIT-BACKEND-PRESERVED: moved out of svelte/ during the cljs migration; not wired.
+//
+// Extracted verbatim (logic unchanged) from
+//   svelte/src/routes/xrpc/[...path]/+server.ts
+// during the Svelte -> ClojureScript frontend migration (see ../cljs/). It
+// imports SvelteKit-only symbols (@sveltejs/kit, ./$types) and there is no
+// SvelteKit build left to host it, so it is NOT wired up — whether to
+// revive it (and how) is an unresolved product decision, not this migration's.
 import { json, type RequestEvent } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
