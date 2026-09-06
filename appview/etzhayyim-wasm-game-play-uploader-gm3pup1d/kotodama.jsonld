@@ -78,7 +78,7 @@
         "/healthz",
         "/readyz"
       ],
-      "staticDir": "/wasm/svelte/build",
+      "staticDir": "/wasm/cljs/public",
       "spa": false
     },
     "subscribeRepos": {

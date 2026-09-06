@@ -1,6 +1,8 @@
-# Build output produced by docs/operator-quickstart.md steps 2-3 and 5.
+# Build output produced by docs/operator-quickstart.md steps 2, 3 and 5.
 # Without these, following the quickstart leaves ~200MB of untracked noise in
 # `git status` and invites committing node_modules.
+# (`.svelte-kit/` dropped 2026-09-07 — the SvelteKit build it covered was
+# removed by the Svelte → ClojureScript migration; see `appview/…/cljs/`,
+# which has its own nested .gitignore for shadow-cljs output.)
 node_modules/
-.svelte-kit/
 .wrangler/

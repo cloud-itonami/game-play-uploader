@@ -20,12 +20,16 @@ newer versions are likely fine and older ones untested.
 
 ```
 node       v26.3.0
-pnpm       10.26.2
+pnpm       10.26.2    # step 2 only (appview/…/package.json, src/app.ts typecheck)
+npm        (on PATH)  # step 3 only (cljs/package.json — shadow-cljs, not pnpm)
 nbb        (on PATH)
 wrangler   4.69.0     # global; NOT a dependency of either package.json
 ```
 
-`wrangler` is only needed for step 5. Steps 1–4 do not use it.
+`wrangler` is only needed for step 5. Steps 1–4 do not use it. `cljs/` uses
+`npm`, not `pnpm` — it was scaffolded from the landed reference
+(`cloud-itonami/app-tia`'s `tia-mcp-component/cljs`), which uses `npm`
+throughout this workspace's cljs appview frontends; don't `pnpm install` there.
 
 Set a shell variable for the app directory — it is long and every step needs it:
 
@@ -56,6 +60,13 @@ game-play-uploader.etzhayyim.com  NXDOMAIN  <- .../wrangler.jsonc, lp/*.html, ..
 
 5 of 6 declared hosts do not exist.
 ```
+
+**This exact output predates the 2026-09-07 cljs migration and is now stale in
+one detail**: `svelte/src/routes/xrpc/[...path]/+server.ts` no longer exists —
+the same `mcp.etzhayyim.com` reference now lives in
+`src/xrpc-proxy.ts` (see the README's piece 2). Re-run the command; the file
+count and file citation will differ from the transcript above, the host
+verdicts should not (this migration did not touch DNS or hosts).
 
 Three exit codes, and they mean different things:
 
@@ -90,132 +101,104 @@ afterwards.
 code. It is still worth keeping green, because the divergence that makes it dead
 is unresolved and it may become the live entrypoint.
 
-## 3. Build the artifact that *is* deployed (≈15s)
+## 3. Build the frontend that *is* deployed (≈45s)
+
+**Changed 2026-09-07** (Svelte → ClojureScript migration, ADR-2608260900).
+Through 2026-09-06 this step built the SvelteKit BFF under `$APP/svelte`; that
+tree is deleted. The frontend is now `$APP/cljs` — reagent + re-frame + hiccup
+on `jp-go-dds`, a single-page app (ADR-2608080100), served as static assets
+(no server-side rendering, no BFF route).
 
 ```bash
-cd $APP/svelte
-pnpm install
+cd $APP/cljs
+npm install
 ```
-
-Observed: installs SvelteKit 2.70.2, svelte 5.56.9, vite 6.4.3,
-`@sveltejs/adapter-cloudflare` 7.2.9, and warns that build scripts for
-`esbuild` and `workerd` were ignored. **The warning is not a problem** — the
-build below succeeds without approving them.
 
 Builds in this workspace are serialised repo-wide (CLAUDE.md, resource
-governor). Do **not** call `pnpm build` directly:
+governor). Do **not** call `npx shadow-cljs` directly:
 
 ```bash
-node /path/to/com-junkawasaki/scripts/resource-guard.mjs run build -- pnpm build
+node /path/to/com-junkawasaki/scripts/resource-guard.mjs run build -- npx shadow-cljs compile app
 ```
 
-If another session holds the build lock you get
-`resource-guard: build is already running (pid=…)` and **exit 2**. That is the
-guard working. Wait and retry — the recorded run was blocked once by an
-unrelated repo's build and succeeded on retry.
+If another session holds the build lock you get exit `2` and no build output —
+that is the guard working, not a failure. Wait and retry.
 
-Observed on success: `✓ built in 4.38s`, then
-`Using @sveltejs/adapter-cloudflare  ✔ done`, **exit 0**.
+Observed on the run recorded for this migration: `[:app] Build completed.
+(111 files, 110 compiled, 0 warnings, 29.38s)`, **exit 0**. Same command with
+`compile test` instead of `compile app` compiles the test build (`(112 files,
+111 compiled, 0 warnings, 13.06s)`); running `node out/tests.js` afterwards
+prints `Ran 5 tests containing 14 assertions. 0 failures, 0 errors.`
+`npm test` (`shadow-cljs compile test && node out/tests.js`) runs both steps.
 
-Confirm the artifact `wrangler.jsonc` points at now exists:
+Confirm the artifact `wrangler.jsonc` now points at exists:
 
 ```bash
 cd $APP
-ls svelte/.svelte-kit/cloudflare/_worker.js svelte/.svelte-kit/cloudflare/client
+ls cljs/public/index.html cljs/public/js/app.js
 ```
 
-Both exist after the build; neither exists before it.
+`index.html` exists before and after the build (it is checked in, not
+generated); `js/app.js` exists only after.
 
-## 4. Run it and see what it actually serves (≈20s)
+## 4. What it serves, and what changed (≈5 min read, no server run)
+
+**This step's original form (`pnpm preview` against the SvelteKit build, then
+curling `localhost:4319`) no longer applies** — there is no `pnpm preview`
+equivalent wired up for the cljs build in this repo, and starting one (or
+running `wrangler dev`) was out of scope for the migration that replaced this
+tree (see step 7's reasoning — the same "don't stand up a preview of an app
+that can't launch its funnel" logic applies, plus this migration specifically
+avoided `wrangler dev`/`deploy` so as not to make the entrypoint decision in
+piece 1 of the README by accident). What follows is what changed, checked by
+reading the build output and source rather than by curling a running server.
+
+**`/` still serves the generated scaffold placeholder**, now built from
+`cljs/`. `cljs/public/index.html`'s `<title>` and the mounted view's copy are
+byte-for-byte the same strings the old `+page.svelte` rendered
+(`etzhayyim-wasm-game-play-uploader-gm3pup1d` / *"No public route is declared
+next to this app surface."*) — confirm without a server:
 
 ```bash
-cd $APP/svelte
-pnpm preview --port 4319
+grep -o '<title>[^<]*</title>' $APP/cljs/public/index.html
+grep -n 'No public route' $APP/cljs/src/game_play_uploader/app.cljs
 ```
 
-In another shell:
+`kotodama.jsonld` still advertises `/kids` `/adult-print` `/kids-print`
+`/health` `/healthz` `/readyz` under `triggers.http.routes`; none of them are
+implemented by the static cljs build (it has exactly one document, per
+ADR-2608080100 — `/health` etc. were only ever implemented by the undeployed
+`src/app.ts`, unaffected by this migration). That declaration was already wrong
+for the thing that ships before 2026-09-07 and still is.
 
-```bash
-for p in / /health /healthz /kids; do printf '%-10s -> ' "$p"; \
-  curl -sS -o /dev/null -w '%{http_code}\n' "http://localhost:4319$p"; done
-```
-
-Observed:
-
-```
-/          -> 200
-/health    -> 404
-/healthz   -> 404
-/kids      -> 404
-```
-
-The 404s are **not** a misconfigured preview. `/health` exists only in the
-undeployed `src/app.ts`; `/kids` exists nowhere. `kotodama.jsonld` advertises
-all of them under `triggers.http.routes`, and that declaration is wrong for the
-thing that ships.
-
-Now look at what `/` is:
-
-```bash
-curl -sS http://localhost:4319/ | grep -oE '<title>[^<]*</title>|No public route'
-```
-
-Observed:
-
-```
-<title>etzhayyim-wasm-game-play-uploader-gm3pup1d</title>
-No public route
-```
-
-That is the **generated scaffold placeholder**, not the campaign. The campaign
-pages are in `lp/` and no route serves them.
-
-Confirm which entrypoint the build closure contains:
-
-```bash
-cd $APP/svelte/.svelte-kit
-grep -rlF dispatcher.etzhayyim.com cloudflare output   # -> nothing
-grep -rlF mcp.etzhayyim.com        cloudflare output   # -> output/server/entries/endpoints/xrpc/...
-```
-
-`src/app.ts`'s markers are absent; the SvelteKit BFF's are present. That is the
-divergence the README describes, reproduced.
-
-Finally, the XRPC route:
-
-```bash
-curl -sS -X POST -H 'content-type: application/json' -d '{}' \
-  http://localhost:4319/xrpc/com.etzhayyim.apps.gamePlayUploader.ping
-```
-
-Observed: `{"message":"Internal Error"}`. Correct — the upstream MCP router host
-is NXDOMAIN (step 1). This path cannot succeed anywhere until that host exists.
-
-Stop the preview with:
-
-```bash
-pkill -f "preview --port 4319"
-```
-
-Not `pkill -f "vite preview …"` — that matches nothing. `pnpm` execs
-`…/vite/bin/vite.js preview --port 4319`, so `vite` and `preview` are not
-adjacent on the command line and the obvious pattern silently kills nothing and
-exits 1. Two processes match the form above (the `pnpm` wrapper and `vite.js`);
-both need to go.
+**The XRPC route is gone, not failing.** Before this migration, the SvelteKit
+BFF's `/xrpc/[...path]` route existed and failed at the upstream fetch (see the
+Status section's history). `wrangler.jsonc` no longer names a `main` Worker
+script (step 5), so there is no server-side code left to receive that request
+at all — the endpoint's handler was moved unmodified to
+`$APP/src/xrpc-proxy.ts` (`SVELTEKIT-BACKEND-PRESERVED` marker) rather than
+deleted, but it imports SvelteKit-only symbols and is not wired to anything.
+Reviving it is the same entrypoint decision the README's piece 1 describes.
 
 ## 5. Validate the deploy config without publishing (≈10s)
+
+**Not re-run as part of the 2026-09-07 cljs migration** — the numbers below
+are from the last SvelteKit-era build and are stale for two reasons: the
+upload closure is now `cljs/public` instead of the SvelteKit adapter output,
+and `wrangler.jsonc` no longer declares `main` at all (see the README's piece 1
+for why this migration deliberately left that undecided rather than repointing
+it at `src/app.ts`). Re-run this before trusting the numbers:
 
 ```bash
 cd $APP
 wrangler deploy --dry-run --outdir /tmp/gpu-dryrun
 ```
 
-Observed: `Total Upload: 418.93 KiB` (gzip ≈94.5 KiB — it moves by ~10 bytes
-between builds), a binding table listing `env.ASSETS` and the nine `APP_*` /
-`AGENTGATEWAY_MCP_ROUTER_URL` vars, then `--dry-run: exiting now.`
-
-Note what is **absent** from that table: `DISPATCHER_INTERNAL_SECRET`, which
-`src/app.ts` reads. Another view of the same divergence.
+Previously observed (SvelteKit era, superseded): `Total Upload: 418.93 KiB`
+(gzip ≈94.5 KiB), a binding table listing `env.ASSETS` and the nine `APP_*` /
+`AGENTGATEWAY_MCP_ROUTER_URL` vars, then `--dry-run: exiting now.` — and, absent
+from that table, `DISPATCHER_INTERNAL_SECRET` (which `src/app.ts` reads;
+another view of the same divergence).
 
 `--dry-run` publishes nothing and is explicitly permitted by this workspace's
 deploy guard.
@@ -281,26 +264,30 @@ fast-forward check and the last writer wins.
 
 ## Afterwards
 
-`.gitignore` covers the ~315 MB of `node_modules/`, `.svelte-kit/` and
-`.wrangler/` these steps create, so `git status` stays readable. Two files do
-show up untracked:
+`.gitignore` (root, plus `cljs/.gitignore` for shadow-cljs output) covers the
+`node_modules/` and `.wrangler/` these steps create, so `git status` stays
+readable. One file does show up untracked:
 
 ```
 ?? appview/…/pnpm-lock.yaml
-?? appview/…/svelte/pnpm-lock.yaml
 ```
 
-That is deliberate, not an oversight. Neither lockfile is committed today, and
-committing them pins dependency versions the repo currently leaves floating —
-a real decision, so it is left to whoever makes it rather than hidden by an
-ignore rule.
+That is deliberate, not an oversight. The lockfile is not committed today, and
+committing it pins dependency versions the repo currently leaves floating — a
+real decision, so it is left to whoever makes it rather than hidden by an
+ignore rule. (Before 2026-09-07, `svelte/pnpm-lock.yaml` showed up the same
+way; that tree is gone. `cljs/package-lock.json` — `npm`, not `pnpm` — **is**
+committed, following the landed reference this scaffold was copied from.)
 
 ## What this quickstart does not cover
 
 - **The campaign logic.** Not in this repo — it lives in the kotodama ingest
   module and the BPMN contracts named in `src/app.ts`.
 - **Resolving the entrypoint divergence.** Documented in the README, not fixed.
-  Fixing it means deciding whether the dispatcher facade or the MCP BFF is
-  authoritative, which changes behaviour.
+  Fixing it means deciding whether the dispatcher facade (`src/app.ts`) becomes
+  the Worker's `main` (fronting the static cljs assets itself) or the app stays
+  assets-only with no server-side `/xrpc/*` handler — either is a behaviour
+  change, not a documentation one. The 2026-09-07 Svelte → ClojureScript
+  migration deliberately did not decide this (see README piece 1).
 - **The open items in `MIGRATION-TODO.md`** — the substrate-boundary checklist
   from the extraction. Only the ad-pixel item is closed.
