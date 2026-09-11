@@ -42,7 +42,7 @@ APP=appview/etzhayyim-wasm-game-play-uploader-gm3pup1d
 Run from the repo root:
 
 ```bash
-nbb docs/check-surface.cljk
+kbb --backend sci docs/check-surface.cljk
 ```
 
 Observed — **exit 1**, and exit 1 is the expected result today:
@@ -118,7 +118,7 @@ Builds in this workspace are serialised repo-wide (CLAUDE.md, resource
 governor). Do **not** call `npx shadow-cljs` directly:
 
 ```bash
-node /path/to/com-junkawasaki/scripts/resource-guard.mjs run build -- npx shadow-cljs compile app
+node /path/to/com-junkawasaki/scripts/resource-guard.mjs run build -- amu compile --target wasm32-browser app
 ```
 
 If another session holds the build lock you get exit `2` and no build output —
@@ -129,7 +129,7 @@ Observed on the run recorded for this migration: `[:app] Build completed.
 `compile test` instead of `compile app` compiles the test build (`(112 files,
 111 compiled, 0 warnings, 13.06s)`); running `node out/tests.js` afterwards
 prints `Ran 5 tests containing 14 assertions. 0 failures, 0 errors.`
-`npm test` (`shadow-cljs compile test && node out/tests.js`) runs both steps.
+`npm test` (`amu compile --target wasm32-browser test && node out/tests.js`) runs both steps.
 
 Confirm the artifact `wrangler.jsonc` now points at exists:
 
