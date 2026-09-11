@@ -42,7 +42,7 @@ APP=appview/etzhayyim-wasm-game-play-uploader-gm3pup1d
 Run from the repo root:
 
 ```bash
-nbb docs/check-surface.cljs
+nbb docs/check-surface.cljk
 ```
 
 Observed — **exit 1**, and exit 1 is the expected result today:

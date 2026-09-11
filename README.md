@@ -30,7 +30,7 @@ landed on (`9f30c92`):
 The parent zone resolves and the measuring host's network was fine (a control
 request to an unrelated host returned 200), so these are genuine absences, not a
 local DNS failure. Re-measure before trusting this table:
-`nbb docs/check-surface.cljs` (see the quickstart).
+`nbb docs/check-surface.cljk` (see the quickstart).
 
 **2026-09-07: the frontend moved from SvelteKit to ClojureScript** (reagent +
 re-frame + jp-go-dds, ADR-2608260900) — see piece 2 below. This is a build/UI
