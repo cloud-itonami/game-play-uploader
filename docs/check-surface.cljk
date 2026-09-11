@@ -1,7 +1,7 @@
 #!/usr/bin/env nbb
-;; docs/check-surface.cljs — do the hosts this repo declares actually exist?
+;; docs/check-surface.cljk — do the hosts this repo declares actually exist?
 ;;
-;;   nbb docs/check-surface.cljs            # from the repo root
+;;   nbb docs/check-surface.cljk            # from the repo root
 ;;
 ;; The README states, as a dated measurement, that every etzhayyim host this
 ;; repo depends on is NXDOMAIN. A dated measurement rots. This re-takes it.

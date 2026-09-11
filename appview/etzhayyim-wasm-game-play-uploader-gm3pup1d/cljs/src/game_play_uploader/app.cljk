@@ -51,7 +51,7 @@
           "APP_DISPLAY_NAME" "APP_EMBED_URL" "APP_FRAMEWORK" "APP_NANOID"
           "APP_PERFORMER_TYPE" "APP_UI_TYPE"]
    :xrpc? true
-   :relative-path "appview/etzhayyim-wasm-game-play-uploader-gm3pup1d/cljs/src/game_play_uploader/app.cljs"})
+   :relative-path "appview/etzhayyim-wasm-game-play-uploader-gm3pup1d/cljs/src/game_play_uploader/app.cljk"})
 
 (rf/reg-event-db
  :initialize-db
