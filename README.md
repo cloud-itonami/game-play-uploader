@@ -30,7 +30,7 @@ landed on (`9f30c92`):
 The parent zone resolves and the measuring host's network was fine (a control
 request to an unrelated host returned 200), so these are genuine absences, not a
 local DNS failure. Re-measure before trusting this table:
-`nbb docs/check-surface.cljk` (see the quickstart).
+`kbb --backend sci docs/check-surface.cljk` (see the quickstart).
 
 **2026-09-07: the frontend moved from SvelteKit to ClojureScript** (reagent +
 re-frame + jp-go-dds, ADR-2608260900) — see piece 2 below. This is a build/UI
@@ -125,7 +125,7 @@ but accurate self-description: the page title is the package name
 (`etzhayyim-wasm-game-play-uploader-gm3pup1d`) and the body reads *"No public
 route is declared next to this app surface."* This was not re-verified against
 a running preview as part of the migration (see the "Not run" note in the
-quickstart); what *was* verified is that `npx shadow-cljs compile app` and
+quickstart); what *was* verified is that `amu compile --target wasm32-browser app` and
 `compile test` + `node out/tests.js` both pass (0 warnings; 5 tests, 14
 assertions, 0 failures/errors).
 
