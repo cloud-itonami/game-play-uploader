@@ -114,7 +114,7 @@ cd $APP/cljs
 npm install
 ```
 
-Builds in this workspace are serialised repo-wide (CLAUDE.md, resource
+Builds in this workspace are serialised repo-wide (AGENTS.md, resource
 governor). Do **not** call `npx shadow-cljs` directly:
 
 ```bash
